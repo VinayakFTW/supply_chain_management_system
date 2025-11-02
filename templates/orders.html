@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - Smart Supply Chain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">SmartSupply</div>
+            <div class="tagline">Supply Chain Management</div>
+        </div>
+        <ul class="nav-menu">
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            {% endif %}
+            {% if session.get('role') == 'user' %}
+            <li class="nav-item">
+                <a href="{{ url_for('user_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            {% endif %}
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('customers') }}"><i class="fas fa-users"></i> Customers</a>
+            </li>
+            {% endif %}
+            <li class="nav-item active">
+                <a href="{{ url_for('orders') }}"><i class="fas fa-box-open"></i> Orders</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('invoices') }}"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="{{ url_for('reports') }}"><i class="fas fa-chart-line"></i> Reports</a>
+            </li>
+            </ul>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-name">{{ session.get('username', 'Demo User') }}</div>
+                <div class="user-role">{{ session.get('role', 'Admin') | capitalize }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-icon"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="navbar">
+            <h1 class="page-title">Orders</h1>
+            <div class="theme-switcher">
+                <i class="fas fa-moon"></i>
+            </div>
+        </header>
+
+        <div class="page-actions">
+            
+            <form action="{{ url_for('orders') }}" method="GET" class="filter-form">
+                
+                <div class="filter-grid">
+                    <div class="filter-grid-item">
+                        <label for="order_id">Order ID</label>
+                        <input type="text" name="order_id" id="order_id" placeholder="Search by Order ID..." value="{{ search_order_id or '' }}">
+                    </div>
+                    
+                    <div class="filter-grid-item">
+                        <label for="customer_name">Customer Name</label>
+                        <input type="text" name="customer_name" id="customer_name" placeholder="Search by Customer Name..." value="{{ search_customer_name or '' }}">
+                    </div>
+                    
+                    <div class="filter-grid-item">
+                        <label for="status">Status</label>
+                        <select name="status" id="status">
+                            <option value="" {% if not search_status %}selected{% endif %}>All Statuses</option>
+                            <option value="Shipped" {% if search_status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                            <option value="Processing" {% if search_status == 'Processing' %}selected{% endif %}>Processing</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <button class="btn btn-primary" type="button" onclick="window.location.href='{{ url_for('add_order') }}'">
+                        <i class="fas fa-plus"></i> Add New Order
+                    </button>
+                </div>
+                
+            </form>
+
+        </div>
+        <div class="content-panel">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %} 
+                    <tr>
+                        <td>ORDER-{{ order.Order_ID }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td><span class="status-badge status-{{ order.Status | lower }}">{{ order.Status | capitalize }}</span></td>
+                        <td>{{ order.Date.strftime('%Y-%m-%d') if order.Date else 'N/A' }}</td>
+                        <td>
+                            <button class="action-btn view" title="View"><i class="fas fa-eye"></i></button> 
+                            <button class="action-btn edit" title="Edit"><i class="fas fa-pen"></i></button>
+                            <a href="{{ url_for('delete_order', id=order.Order_ID) }}" class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center;">No orders found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

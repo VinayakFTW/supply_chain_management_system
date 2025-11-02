@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Vehicle - Smart Supply Chain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">SmartSupply</div>
+            <div class="tagline">Supply Chain Management</div>
+        </div>
+        <ul class="nav-menu">
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            {% endif %}
+            {% if session.get('role') == 'user' %}
+            <li class="nav-item">
+                <a href="{{ url_for('user_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            {% endif %}
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('customers') }}"><i class="fas fa-users"></i> Customers</a>
+            </li>
+            {% endif %}
+            <li class="nav-item active">
+                <a href="{{ url_for('orders') }}"><i class="fas fa-box-open"></i> Orders</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('invoices') }}"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('reports') }}"><i class="fas fa-chart-line"></i> Reports</a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-name">{{ session.get('username', 'Demo User') }}</div>
+                <div class="user-role">{{ session.get('role', 'Admin') | capitalize }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-icon"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+    <div class="main-content">
+        <header class="navbar">
+            <h1 class="page-title">Edit Vehicle: {{ vehicle.License_Plate }}</h1>
+            <div class="theme-switcher">
+                <i class="fas fa-moon"></i>
+            </div>
+        </header>
+
+        <div class="content-panel">
+            <form action="{{ url_for('update_vehicle', id=vehicle.Vehicle_ID) }}" method="POST" class="settings-form">
+                <h2>Vehicle Details</h2>
+                
+                <div class="form-group">
+                    <label for="vehicle_id">Vehicle ID (Cannot be changed)</label>
+                    <input type="number" id="vehicle_id" name="vehicle_id" value="{{ vehicle.Vehicle_ID }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <input type="text" id="type" name="type" value="{{ vehicle.Type }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="license_plate">License Plate</label>
+                    <input type="text" id="license_plate" name="license_plate" value="{{ vehicle.License_Plate }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="capacity">Capacity (kg)</label>
+                    <input type="number" step="0.01" id="capacity" name="capacity" value="{{ vehicle.Capacity }}">
+                </div>
+                 <div class="form-group">
+                    <label for="status">Status</label>
+                    <input type="text" id="status" name="status" value="{{ vehicle.Status }}" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Update Vehicle</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

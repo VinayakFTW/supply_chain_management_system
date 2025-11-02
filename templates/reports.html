@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Smart Supply Chain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    </head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">SmartSupply</div>
+            <div class="tagline">Supply Chain Management</div>
+        </div>
+        <ul class="nav-menu">
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            {% endif %}
+            {% if session.get('role') == 'user' %}
+            <li class="nav-item">
+                <a href="{{ url_for('user_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            {% endif %}
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('customers') }}"><i class="fas fa-users"></i> Customers</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a href="{{ url_for('orders') }}"><i class="fas fa-box-open"></i> Orders</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('invoices') }}"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
+            </li>
+            <li class="nav-item active">
+                <a href="{{ url_for('reports') }}"><i class="fas fa-chart-line"></i> Reports</a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-name">{{ session.get('username', 'Demo User') }}</div>
+                <div class="user-role">{{ session.get('role', 'Admin') | capitalize }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-icon"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="navbar">
+            <h1 class="page-title">Advanced Reports</h1> <div class="theme-switcher">
+                <i class="fas fa-moon"></i>
+            </div>
+        </header>
+
+        <div class="nav-grid">
+            
+            <a href="{{ url_for('report_top_customers') }}" class="nav-card">
+                <h3 class="color-blue">Top 5 Customers by Purchase Value</h3>
+            </a>
+            
+            <a href="{{ url_for('report_low_stock') }}" class="nav-card">
+                <h3 class="color-orange">Low-Stock Products (Stock < 100)</h3>
+            </a>
+            
+            <a href="{{ url_for('report_delayed_shipments') }}" class="nav-card">
+                <h3 class="color-red">Delayed Shipments (En Route past Arrival)</h3>
+            </a>
+            
+            <a href="{{ url_for('report_revenue_by_warehouse') }}" class="nav-card">
+                <h3 class="color-green">Total Paid Revenue Per Warehouse</h3>
+            </a>
+            
+            <a href="{{ url_for('report_overdue_invoices') }}" class="nav-card">
+                <h3 class="color-red">Overdue Pending Invoices</h3>
+            </a>
+            
+            <a href="{{ url_for('report_product_suppliers') }}" class="nav-card">
+                <h3 class="color-blue">All Products and Their Suppliers</h3>
+            </a>
+            
+            <a href="{{ url_for('report_vehicle_frequency') }}" class="nav-card">
+                <h3 class="color-orange">Vehicle Shipment Frequency</h3>
+            </a>
+            
+            <a href="{{ url_for('report_popular_products') }}" class="nav-card">
+                <h3 class="color-green">Most Popular Products (by Quantity)</h3>
+            </a>
+
+            <a href="{{ url_for('report_avg_ship_duration') }}" class="nav-card">
+                <h3 class="color-purple">Average Shipment Duration</h3>
+            </a>
+
+            <a href="{{ url_for('report_product_by_manufacturer') }}" class="nav-card">
+                <h3 class="color-blue">Product Count by Manufacturer</h3>
+            </a>
+
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </body>
+</html>

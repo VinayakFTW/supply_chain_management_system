@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Reports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">SmartSupply</div>
+            <div class="tagline">Supply Chain Management</div>
+        </div>
+        <ul class="nav-menu">
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            {% endif %}
+            {% if session.get('role') == 'user' %}
+            <li class="nav-item">
+                <a href="{{ url_for('user_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            {% endif %}
+            {% if session.get('role') == 'admin' %}
+            <li class="nav-item">
+                <a href="{{ url_for('customers') }}"><i class="fas fa-users"></i> Customers</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a href="{{ url_for('orders') }}"><i class="fas fa-box-open"></i> Orders</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('invoices') }}"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
+            </li>
+            <li class="nav-item active">
+                <a href="{{ url_for('reports') }}"><i class="fas fa-chart-line"></i> Reports</a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-name">{{ session.get('username', 'Demo User') }}</div>
+                <div class="user-role">{{ session.get('role', 'Admin') | capitalize }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-icon"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="navbar">
+            <h1 class="page-title">{{ title }}</h1>
+            <div class="theme-switcher">
+                <i class="fas fa-moon"></i>
+            </div>
+        </header>
+
+        <div class="page-actions">
+            <div class="filter-buttons">
+                <button class="btn btn-secondary" type="button" onclick="window.location.href='{{ url_for('reports') }}'">
+                    <i class="fas fa-arrow-left"></i> Back to Reports
+                </button>
+            </div>
+        </div>
+
+        <div class="content-panel">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        {% for header in headers %}
+                            <th>{{ header.replace('_', ' ') | title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        {% for header in headers %}
+                            <td>{{ row[header] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="{{ headers | length }}" style="text-align: center;">No results found for this report.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

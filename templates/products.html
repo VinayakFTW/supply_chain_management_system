@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Smart Supply Chain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">SmartSupply</div>
+            <div class="tagline">Supply Chain Management</div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-name">{{ session.get('username', 'Demo User') }}</div>
+                <div class="user-role">{{ session.get('role', 'Admin') | capitalize }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-icon"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="navbar">
+            <h1 class="page-title">Manage Products</h1>
+            <div class="theme-switcher">
+                <i class="fas fa-moon"></i>
+            </div>
+        </header>
+
+        <div class="page-actions">
+            <form action="{{ url_for('products') }}" method="GET" class="filter-form">
+                <div class="filter-grid">
+                    <div class="filter-grid-item">
+                        <label for="search_name">Product Name</label>
+                        <input type="text" name="search_name" id="search_name" placeholder="Search..." value="{{ search_name or '' }}">
+                    </div>
+                    <div class="filter-grid-item">
+                        <label for="search_sku">SKU</label>
+                        <input type="text" name="search_sku" id="search_sku" placeholder="Search..." value="{{ search_sku or '' }}">
+                    </div>
+                    <div class="filter-grid-item">
+                        <label for="search_manufacturer">Manufacturer</label>
+                        <input type="text" name="search_manufacturer" id="search_manufacturer" placeholder="Search..." value="{{ search_manufacturer or '' }}">
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <button class="btn btn-primary" type="button" onclick="window.location.href='{{ url_for('add_product') }}'">
+                        <i class="fas fa-plus"></i> Add New Product
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="content-panel">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>SKU</th>
+                        <th>Manufacturer</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.Product_ID }}</td>
+                        <td>{{ product.Name }}</td>
+                        <td>{{ product.Description }}</td>
+                        <td>{{ product.SKU }}</td>
+                        <td>{{ product.Manufacturer_Name or 'N/A' }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_product', id=product.Product_ID) }}" class="action-btn edit" title="Edit"><i class="fas fa-pen"></i></a>
+                            <a href="{{ url_for('delete_product', id=product.Product_ID) }}" class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center;">No products found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Smart Supply Chain</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">SmartSupply</div>
+            <div class="tagline">Supply Chain Management</div>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active">
+                <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('customers') }}"><i class="fas fa-users"></i> Customers</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('orders') }}"><i class="fas fa-box-open"></i> Orders</a> 
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('invoices') }}"><i class="fas fa-file-invoice-dollar"></i> Invoices</a> 
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('reports') }}"><i class="fas fa-chart-line"></i> Reports</a>
+            </li>
+            </ul>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-name">{{ session.get('username', 'Demo User') }}</div>
+                <div class="user-role">{{ session.get('role', 'Admin') | capitalize }}</div>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-icon"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="navbar">
+            <h1 class="page-title">SCM Dashboard</h1> <div class="theme-switcher">
+                <i class="fas fa-moon"></i>
+            </div>
+        </header>
+
+        <div class="nav-grid">
+            <a href="{{ url_for('customers') }}" class="nav-card">
+                <h3 class="color-blue">Manage Customers</h3>
+                <p>View, add, edit, and delete customer records.</p>
+            </a>
+            
+            <a href="{{ url_for('products') }}" class="nav-card"> <h3 class="color-green">Manage Products</h3>
+                <p>Browse product catalog and manage SKUs.</p>
+            </a>
+
+            <a href="{{ url_for('orders') }}" class="nav-card">
+                <h3 class="color-orange">View Orders</h3>
+                <p>Track all incoming orders and their status.</p>
+            </a>
+
+            <a href="{{ url_for('reports') }}" class="nav-card">
+                <h3 class="color-purple">Advanced Reports</h3>
+                <p>Run analytics on your supply chain data.</p>
+            </a>
+
+            <a href="{{ url_for('suppliers') }}" class="nav-card"> <h3 class="color-blue">Manage Suppliers</h3>
+                <p>Manage raw material suppliers.</p>
+            </a>
+
+            <a href="{{ url_for('manufacturers') }}" class="nav-card"> <h3 class="color-red">Manage Manufacturers</h3>
+                <p>Manage product manufacturers.</p>
+            </a>
+
+            <a href="{{ url_for('warehouses') }}" class="nav-card"> <h3 class="color-green">Manage Warehouses</h3>
+                <p>Manage storage facilities and capacity.</p>
+            </a>
+
+            <a href="{{ url_for('vehicles') }}" class="nav-card"> <h3 class="color-orange">Manage Vehicles</h3>
+                <p>Manage transport fleet and status.</p>
+            </a>
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
