@@ -1,14 +1,19 @@
 from flask import Flask,render_template, request, redirect, url_for, session, flash
 import mysql.connector as ms
-import datetime
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def get_db_connection():
     try:
         conn = ms.connect(
-            host="localhost",
-            user="root",
-            password="vini",
-            database="smart_supply_chain"
+            host=os.environ.get("HOST"),
+            port=os.environ.get("PORT"),
+            user=os.environ.get("USER"),
+            password=os.environ.get("PASSWORD"),
+            database=os.environ.get("DATABASE")
         )
         return conn
     except ms.Error as e:
